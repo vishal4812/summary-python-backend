@@ -1,0 +1,14 @@
+# Python caches and tooling
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+
+# Local environments and secrets
+.venv/
+.env
+.env.*
+
+# Runtime data
+data/usage.db
+*.log
