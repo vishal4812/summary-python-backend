@@ -23,6 +23,10 @@ class UsageIncrementRequest(BaseModel):
     deviceId: str = Field(min_length=1)
 
 
+class UsageResetRequest(BaseModel):
+    deviceId: str = Field(min_length=1)
+
+
 class UsageResponse(BaseModel):
     success: bool = True
     deviceId: str

@@ -11,6 +11,7 @@ from .schemas import (
     TranscribeResponse,
     UsageCheckRequest,
     UsageIncrementRequest,
+    UsageResetRequest,
     UsageResponse,
 )
 from .services.summarizer import DummySummarizer
@@ -49,11 +50,20 @@ async def transcribe(
     destination = UPLOADS_DIR / f"{upload_id}_{safe_name}"
     contents = await file.read()
     destination.write_bytes(contents)
+    language_label = language or "the selected language"
+    transcript = (
+        f"This is a placeholder transcript for {safe_name}. "
+        f"The file upload reached the backend successfully in {language_label}, "
+        "so the app and API are now integrated for the import flow. "
+        "Real speech-to-text is not connected yet."
+    )
 
     return TranscribeResponse(
       uploadId=upload_id,
       filename=safe_name,
       language=language,
+      transcript=transcript,
+      status="placeholder_transcript",
       message="Audio upload is working. Real transcription is not connected yet.",
     )
 
@@ -73,6 +83,18 @@ def usage_check(payload: UsageCheckRequest) -> UsageResponse:
 @app.post("/usage/increment", response_model=UsageResponse)
 def usage_increment(payload: UsageIncrementRequest) -> UsageResponse:
     record = usage_store.increment(payload.deviceId)
+    return UsageResponse(
+        deviceId=record.device_id,
+        used=record.used,
+        remainingFreeUses=usage_store.remaining(record),
+        limit=FREE_LIMIT,
+        isPro=record.is_pro,
+    )
+
+
+@app.post("/usage/reset", response_model=UsageResponse)
+def usage_reset(payload: UsageResetRequest) -> UsageResponse:
+    record = usage_store.reset(payload.deviceId)
     return UsageResponse(
         deviceId=record.device_id,
         used=record.used,
