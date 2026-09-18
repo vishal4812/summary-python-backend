@@ -14,7 +14,7 @@ from .schemas import (
     UsageResetRequest,
     UsageResponse,
 )
-from .services.summarizer import DummySummarizer
+from .services.summarizer import HeuristicSummarizer
 from .usage_store import UsageStore
 
 app = FastAPI(title=APP_NAME, version=APP_VERSION)
@@ -27,7 +27,7 @@ app.add_middleware(
 )
 
 usage_store = UsageStore()
-summarizer = DummySummarizer()
+summarizer = HeuristicSummarizer()
 
 
 @app.get("/health")
@@ -59,12 +59,12 @@ async def transcribe(
     )
 
     return TranscribeResponse(
-      uploadId=upload_id,
-      filename=safe_name,
-      language=language,
-      transcript=transcript,
-      status="placeholder_transcript",
-      message="Audio upload is working. Real transcription is not connected yet.",
+        uploadId=upload_id,
+        filename=safe_name,
+        language=language,
+        transcript=transcript,
+        status="placeholder_transcript",
+        message="Audio upload is working. Real transcription is not connected yet.",
     )
 
 

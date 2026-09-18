@@ -12,7 +12,7 @@ class SummarizeResponse(BaseModel):
     summary: str
     bulletPoints: list[str]
     detailedSummary: str
-    serviceMode: str = "dummy"
+    serviceMode: str = "heuristic"
 
 
 class UsageCheckRequest(BaseModel):

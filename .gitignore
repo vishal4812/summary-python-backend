@@ -11,4 +11,6 @@ __pycache__/
 
 # Runtime data
 data/usage.db
+data/uploads/
+!data/uploads/.gitkeep
 *.log
