@@ -1,10 +1,10 @@
 from pathlib import Path
 from uuid import uuid4
 
-from fastapi import FastAPI, File, Form, UploadFile
+from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
-from .config import APP_NAME, APP_VERSION, FREE_LIMIT, UPLOADS_DIR
+from .config import APP_NAME, APP_VERSION, FREE_LIMIT, MAX_AUDIO_UPLOAD_BYTES
 from .schemas import (
     SummarizeRequest,
     SummarizeResponse,
@@ -15,6 +15,7 @@ from .schemas import (
     UsageResponse,
 )
 from .services.summarizer import HeuristicSummarizer
+from .services.transcriber import GeminiTranscriber, TranscriptionError
 from .usage_store import UsageStore
 
 app = FastAPI(title=APP_NAME, version=APP_VERSION)
@@ -28,6 +29,7 @@ app.add_middleware(
 
 usage_store = UsageStore()
 summarizer = HeuristicSummarizer()
+transcriber = GeminiTranscriber()
 
 
 @app.get("/health")
@@ -45,26 +47,29 @@ async def transcribe(
     file: UploadFile = File(...),
     language: str | None = Form(default=None),
 ) -> TranscribeResponse:
-    upload_id = uuid4().hex
     safe_name = Path(file.filename or "audio.bin").name
-    destination = UPLOADS_DIR / f"{upload_id}_{safe_name}"
-    contents = await file.read()
-    destination.write_bytes(contents)
-    language_label = language or "the selected language"
-    transcript = (
-        f"This is a placeholder transcript for {safe_name}. "
-        f"The file upload reached the backend successfully in {language_label}, "
-        "so the app and API are now integrated for the import flow. "
-        "Real speech-to-text is not connected yet."
-    )
+    try:
+        contents = await file.read(MAX_AUDIO_UPLOAD_BYTES + 1)
+        if not contents:
+            raise HTTPException(status_code=422, detail="The audio file is empty.")
+        if len(contents) > MAX_AUDIO_UPLOAD_BYTES:
+            raise HTTPException(status_code=413, detail="Choose an audio file under 20 MB.")
+        transcript = await transcriber.transcribe(
+            filename=safe_name, contents=contents, language=language
+        )
+    except TranscriptionError as error:
+        raise HTTPException(status_code=error.status_code, detail=str(error)) from None
+    finally:
+        await file.close()
 
     return TranscribeResponse(
-        uploadId=upload_id,
+        uploadId=uuid4().hex,
         filename=safe_name,
         language=language,
         transcript=transcript,
-        status="placeholder_transcript",
-        message="Audio upload is working. Real transcription is not connected yet.",
+        status="completed",
+        serviceMode="gemini",
+        message="Audio transcribed successfully with Gemini.",
     )
 
 

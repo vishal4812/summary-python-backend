@@ -1,6 +1,6 @@
 # Summary Python Backend
 
-Prototype FastAPI backend for the mobile summary app. Text summarization now uses a real local heuristic summarizer, while audio upload is wired end to end but transcript generation is still placeholder until a speech-to-text provider is connected.
+FastAPI backend for the mobile summary app. Text summarization uses a local heuristic summarizer, and audio transcription uses Gemini's dedicated `gemini-3.5-transcribe` model.
 
 ## Current Status
 
@@ -11,13 +11,35 @@ Prototype FastAPI backend for the mobile summary app. Text summarization now use
 | `POST /usage/check` | Real | Reads local usage state from SQLite |
 | `POST /usage/increment` | Real | Increments local usage state |
 | `POST /usage/reset` | Real | Resets local usage state |
-| `POST /transcribe` | Prototype | Stores uploads correctly and returns a placeholder transcript |
+| `POST /transcribe` | Gemini | Returns a real transcript; requires a backend API key |
 
 ## Review Path
 
-- No external services are required for local review
+- Health, text summaries, and usage tracking work without external services
+- Real audio transcription requires Gemini access; automated tests mock Gemini
 - `pytest` covers health, summarization, usage tracking, and upload handling
 - GitHub Actions CI runs the Python test suite on push and pull request events
+
+## Configure Gemini
+
+Copy `.env.example` to `.env` and set `GEMINI_API_KEY` there, or set the environment
+variable on the server. The backend loads `.env` automatically; existing environment
+variables take precedence. Never commit `.env` or put the key in the Flutter client.
+The project number is not needed for API-key authentication.
+
+```bash
+cp .env.example .env
+```
+
+The default model is `gemini-3.5-transcribe`; `GEMINI_STT_MODEL` can override it.
+Hindi and Gujarati requests also include an Indian English language hint for mixed
+voice notes. Omitting `language` enables automatic language detection.
+
+Audio is sent inline through the [Gemini Interactions API](https://ai.google.dev/gemini-api/docs/transcribe)
+with interaction storage disabled. New uploads are not saved to the backend's
+`data/uploads` directory. Existing files from the old prototype are not deleted.
+This does not override Google's own data handling policies; free-tier content
+can be used to improve Google's products. See [Gemini pricing and data handling](https://ai.google.dev/gemini-api/docs/pricing).
 
 ## Run Locally
 
@@ -76,8 +98,15 @@ curl -X POST http://127.0.0.1:8010/transcribe \
   -F language=English
 ```
 
+Transcription accepts AAC, M4A, MP3, WAV, OGG, WebM, and FLAC files up to 20 MiB.
+A successful response has `status: "completed"`, `serviceMode: "gemini"`, and
+the recognized `transcript`. Missing credentials return 503; empty/invalid audio
+returns 422; unsupported file extensions return 415; oversized uploads return
+413; Gemini quota errors return 429; provider timeouts return 504. Errors never
+return a placeholder transcript or expose the API key.
+
 ## Production Gaps
 
-- Replace the placeholder transcription response with a real speech-to-text provider
+- Evaluate real Hindi, Gujarati, and mixed-language recordings before claiming transcription quality
 - Add authentication and user-scoped usage limits if the backend is exposed publicly
 - Move usage state out of local SQLite if the app needs multi-user hosted deployment

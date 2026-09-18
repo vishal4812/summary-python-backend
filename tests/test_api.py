@@ -10,16 +10,13 @@ if str(ROOT) not in sys.path:
 
 import app.main as main_module
 from app.usage_store import UsageStore
+from app.services.transcriber import GeminiTranscriber, TranscriptionError
 
 
 @pytest.fixture(autouse=True)
-def isolated_usage_store(tmp_path):
-    original_uploads_dir = main_module.UPLOADS_DIR
-    main_module.UPLOADS_DIR = tmp_path / "uploads"
-    main_module.UPLOADS_DIR.mkdir(parents=True, exist_ok=True)
-    main_module.usage_store = UsageStore(tmp_path / "usage.db")
-    yield
-    main_module.UPLOADS_DIR = original_uploads_dir
+def isolated_backend(tmp_path, monkeypatch):
+    monkeypatch.setattr(main_module, "usage_store", UsageStore(tmp_path / "usage.db"))
+    monkeypatch.setattr(main_module, "transcriber", GeminiTranscriber(api_key=""))
 
 
 @pytest.fixture
@@ -76,19 +73,59 @@ def test_usage_endpoints_increment_and_reset_state(client):
     assert reset_response.json()["used"] == 0
 
 
-def test_transcribe_accepts_uploads_and_marks_transcript_as_placeholder(client, tmp_path):
-    audio_file = tmp_path / "voice-note.wav"
-    audio_file.write_bytes(b"fake-wave-data")
+def test_transcribe_returns_real_provider_result(client, monkeypatch):
+    async def fake_transcribe(*, filename, contents, language):
+        assert filename == "voice-note.wav"
+        assert contents == b"wave-data"
+        assert language == "Gujarati"
+        return "કાલે સવારે મીટિંગ છે."
 
-    with audio_file.open("rb") as handle:
-        response = client.post(
-            "/transcribe",
-            files={"file": ("voice-note.wav", handle, "audio/wav")},
-            data={"language": "English"},
-        )
+    monkeypatch.setattr(main_module.transcriber, "transcribe", fake_transcribe)
+    response = client.post(
+        "/transcribe",
+        files={"file": ("voice-note.wav", b"wave-data", "audio/wav")},
+        data={"language": "Gujarati"},
+    )
 
     assert response.status_code == 200
     payload = response.json()
-    assert payload["status"] == "placeholder_transcript"
+    assert payload["status"] == "completed"
+    assert payload["serviceMode"] == "gemini"
     assert payload["filename"] == "voice-note.wav"
-    assert "upload is working" in payload["message"].lower()
+    assert payload["transcript"] == "કાલે સવારે મીટિંગ છે."
+
+
+@pytest.mark.parametrize(
+    "filename,contents,language,status",
+    [
+        ("note.wav", b"", "English", 422),
+        ("note.txt", b"text", "English", 415),
+        ("note.wav", b"audio", "French", 422),
+        ("note.wav", b"audio", "English", 503),
+    ],
+)
+def test_transcribe_rejects_invalid_uploads_or_missing_key(
+    client, filename, contents, language, status
+):
+    response = client.post(
+        "/transcribe", files={"file": (filename, contents)}, data={"language": language}
+    )
+    assert response.status_code == status
+    assert "transcript" not in response.json()
+
+
+def test_transcribe_rejects_large_upload_before_provider_call(client, monkeypatch):
+    monkeypatch.setattr(main_module, "MAX_AUDIO_UPLOAD_BYTES", 4)
+    response = client.post("/transcribe", files={"file": ("note.wav", b"12345")})
+    assert response.status_code == 413
+
+
+def test_transcribe_preserves_provider_error_and_does_not_consume_usage(client, monkeypatch):
+    async def fail(**kwargs):
+        raise TranscriptionError("Gemini's usage limit was reached.", 429)
+
+    monkeypatch.setattr(main_module.transcriber, "transcribe", fail)
+    response = client.post("/transcribe", files={"file": ("note.wav", b"audio")})
+    assert response.status_code == 429
+    assert response.json()["detail"] == "Gemini's usage limit was reached."
+    assert client.post("/usage/check", json={"deviceId": "test-device"}).json()["used"] == 0

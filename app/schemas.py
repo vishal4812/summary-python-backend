@@ -43,4 +43,5 @@ class TranscribeResponse(BaseModel):
     language: str | None = None
     transcript: str = ""
     status: str = "not_configured"
+    serviceMode: str = "gemini"
     message: str
