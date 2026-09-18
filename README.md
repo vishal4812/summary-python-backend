@@ -19,6 +19,7 @@ FastAPI backend for the mobile summary app. Text summarization uses Gemini `gemi
 - Text summaries and audio transcription require Gemini access; automated tests mock Gemini
 - `pytest` covers health, summarization, usage tracking, and upload handling
 - GitHub Actions CI runs the Python test suite on push and pull request events
+- See the [2026-09-18 audio test report](docs/testing/2026-09-18.md) for live accuracy, format checks, and remaining gaps
 
 ## Configure Gemini
 
@@ -26,6 +27,26 @@ Copy `.env.example` to `.env` and set `GEMINI_API_KEY` there, or set the environ
 variable on the server. The backend loads `.env` automatically; existing environment
 variables take precedence. Never commit `.env` or put the key in the Flutter client.
 The project number is not needed for API-key authentication.
+
+### Keep Gemini on the free tier
+
+An API key alone does not guarantee free usage: Gemini's tier is determined by the
+Google project attached to that key. In [AI Studio Projects](https://aistudio.google.com/app/projects),
+verify that the project is marked **Free** and offers **Set up billing**. Do not
+attach a billing account or add prepaid credit if you require zero charges. Google
+says disabling billing on a paid project downgrades it to the free tier; this
+cannot be done or verified with the API key alone. A budget alert is not a
+zero-cost guarantee. See [Gemini billing](https://ai.google.dev/gemini-api/docs/billing)
+and [Google Cloud budget behavior](https://docs.cloud.google.com/billing/docs/how-to/budgets).
+
+This backend uses only the configured Gemini transcription and summary models.
+It neither enables billing nor changes models or retries automatically when a
+quota is exhausted. A 429 is shown to the client and summary usage is not
+incremented. During [live testing](docs/testing/2026-09-18.md), Google reported
+`generate_content_free_tier_requests` for this project's summary quota, which is
+evidence the tested requests were subject to free-tier limits at that time. If
+billing is later enabled on the project, that observation will no longer prove
+future calls are free. Stop the backend until the project's tier is verified.
 
 ```bash
 cp .env.example .env

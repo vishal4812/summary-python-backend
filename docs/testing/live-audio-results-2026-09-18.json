@@ -1,0 +1,351 @@
+{
+  "created_at": "2026-09-18T06:05:22.792656+00:00",
+  "dataset": "google/fleurs",
+  "dataset_revision": "70bb2e84b976b7e960aa89f1c648e09c59f894dd",
+  "results": [
+    {
+      "case": "hi_in-1",
+      "language": "Hindi",
+      "source_filename": "10011266027513218401.wav",
+      "source_id": "1766",
+      "reference": "कुछ अणुओं में अस्थिर केंद्रक होता है, जिसका मतलब यह है कि उनमें थोड़े या बिना किसी झटके से टूटने की प्रवृत्ति होती है,",
+      "normalized_reference": "कुछ अणुओं में अस्थिर केंद्रक होता है जिसका मतलब यह है कि उनमें थोड़े या बिना किसी झटके से टूटने की प्रवृत्ति होती है",
+      "gender": "MALE",
+      "duration_s": 9.12,
+      "source": "https://huggingface.co/datasets/google/fleurs/resolve/70bb2e84b976b7e960aa89f1c648e09c59f894dd/data/hi_in/audio/test.tar.gz",
+      "category": "human recording",
+      "format": ".wav",
+      "transcription_seconds": 3.06,
+      "transcription_status": 200,
+      "transcript": "कुछ अणुओं में अस्थिर केंद्रक होता है, जिसका मतलब यहां कि उनमें थोड़े या बिना किसी झटके से टूटने की प्रवृत्ति होती है।",
+      "reference_words": 24,
+      "word_errors": 2,
+      "wer": 0.0833,
+      "cer": 0.0259,
+      "summary_seconds": 21.37,
+      "summary_status": 200,
+      "summary_response": {
+        "success": true,
+        "summary": "कुछ अणुओं में अस्थिर केंद्रक पाया जाता है, जिसके कारण वे बहुत कम या बिना किसी झटके के भी टूट सकते हैं।",
+        "bulletPoints": [
+          "कुछ अणुओं में केंद्रक अस्थिर होता है।",
+          "अस्थिर केंद्रक वाले अणुओं में थोड़े या बिना किसी झटके के टूटने की प्रवृत्ति होती है।"
+        ],
+        "detailedSummary": "प्रस्तुत विवरण के अनुसार, कुछ अणुओं में एक अस्थिर केंद्रक मौजूद होता है। इसका अभिप्राय यह है कि ऐसे अणुओं में बिना किसी झटके या अत्यंत मामूली झटके से भी स्वतः टूटने की स्वाभाविक प्रवृत्ति पाई जाती है।",
+        "serviceMode": "gemini"
+      }
+    },
+    {
+      "case": "hi_in-2",
+      "language": "Hindi",
+      "source_filename": "10014385262415025488.wav",
+      "source_id": "1784",
+      "reference": "ग्रीनलैंड को बहुत कम जगह बसाया गया था. नॉर्स सगास में वे कहते हैं कि एरिक रेड हत्या के लिए आइसलैंड से निर्वासित किया गया था, और आगे पश्चिम की यात्रा करते समय, ग्रीनलैंड मिला जिसे ग्रीनलैंड नाम दिया गया.",
+      "normalized_reference": "ग्रीनलैंड को बहुत कम जगह बसाया गया था नॉर्स सगास में वे कहते हैं कि एरिक रेड हत्या के लिए आइसलैंड से निर्वासित किया गया था और आगे पश्चिम की यात्रा करते समय ग्रीनलैंड मिला जिसे ग्रीनलैंड नाम दिया गया",
+      "gender": "MALE",
+      "duration_s": 13.8,
+      "source": "https://huggingface.co/datasets/google/fleurs/resolve/70bb2e84b976b7e960aa89f1c648e09c59f894dd/data/hi_in/audio/test.tar.gz",
+      "category": "human recording",
+      "format": ".mp3",
+      "transcription_seconds": 2.53,
+      "transcription_status": 200,
+      "transcript": "ग्रीनलैंड को बहुत कम जगह बसाया गया था। नॉर्थ सगास में वे कहते हैं कि एरिक रेड हत्या के लिए आइसलैंड से निर्वासित किया गया था और आगे पश्चिम की यात्रा करते समय ग्रीनलैंड मिला जिसे ग्रीनलैंड नाम दिया गया।",
+      "reference_words": 40,
+      "word_errors": 1,
+      "wer": 0.025,
+      "cer": 0.0051,
+      "summary_seconds": 3.99,
+      "summary_status": 200,
+      "summary_response": {
+        "success": true,
+        "summary": "नॉर्थ सगास के अनुसार, आइसलैंड से निर्वासित होने के बाद एरिक रेड ने पश्चिम की यात्रा के दौरान ग्रीनलैंड की खोज की थी, जिसे बहुत कम बसाया गया था।",
+        "bulletPoints": [
+          "ग्रीनलैंड को बहुत कम जगह पर बसाया गया था।",
+          "नॉर्थ सगास के अनुसार, हत्या के आरोप में एरिक रेड को आइसलैंड से निर्वासित किया गया था।",
+          "पश्चिम की ओर यात्रा करते समय एरिक रेड को ग्रीनलैंड मिला, जिसे उसने ग्रीनलैंड नाम दिया।"
+        ],
+        "detailedSummary": "प्रस्तुत विवरण के अनुसार ग्रीनलैंड को बहुत कम जगह बसाया गया था। नॉर्थ सगास का कहना है कि हत्या के कारण एरिक रेड को आइसलैंड से निर्वासित कर दिया गया था, और जब उसने आगे पश्चिम की ओर यात्रा की, तो उसे ग्रीनलैंड मिला जिसे उसने ग्रीनलैंड नाम दिया।",
+        "serviceMode": "gemini"
+      }
+    },
+    {
+      "case": "gu_in-1",
+      "language": "Gujarati",
+      "source_filename": "10022069032386256914.wav",
+      "source_id": "1867",
+      "reference": "છોડ ઓક્સિજન બનાવે છે જેનેથી મનુષ્ય શ્વાસ લે છે, અને તેઓ કાર્બન-ડાયોક્સાઇડ લે છે જેને મનુષ્ય શ્વાસથી બહાર કાઢે છે (એટલે ​​કે, શ્વાસ બહાર કાઢે ).",
+      "normalized_reference": "છોડ ઓક્સિજન બનાવે છે જેનેથી મનુષ્ય શ્વાસ લે છે અને તેઓ કાર્બન-ડાયોક્સાઇડ લે છે જેને મનુષ્ય શ્વાસથી બહાર કાઢે છે એટલે ​​કે શ્વાસ બહાર કાઢે ",
+      "gender": "MALE",
+      "duration_s": 11.16,
+      "source": "https://huggingface.co/datasets/google/fleurs/resolve/70bb2e84b976b7e960aa89f1c648e09c59f894dd/data/gu_in/audio/test.tar.gz",
+      "category": "human recording",
+      "format": ".m4a",
+      "transcription_from_successful_quota_retry": true,
+      "transcription_seconds": null,
+      "transcription_status": 200,
+      "transcript": "છોડ ઓક્સિજન બનાવે છે જેનાથી મનુષ્યોનું શ્વસન લે છે અને તેઓ કાર્બન ડાયોક્સાઇડ લે છે જેને મનુષ્યો શ્વાસથી બહાર કાઢે છે, એટલે કે શ્વાસ બહાર કાઢે.",
+      "reference_words": 26,
+      "word_errors": 4,
+      "wer": 0.1538,
+      "cer": 0.0593,
+      "summary_seconds": 13.9,
+      "summary_status": 200,
+      "summary_response": {
+        "success": true,
+        "summary": "આ વિગતમાં છોડ અને મનુષ્યો વચ્ચેના શ્વસન સંબંધિત વાયુઓના વિનિમય વિશે જણાવવામાં આવ્યું છે.",
+        "bulletPoints": [
+          "છોડ ઓક્સિજન બનાવે છે, જેનો ઉપયોગ મનુષ્યો શ્વાસ લેવા માટે કરે છે.",
+          "મનુષ્યો શ્વાસ બહાર કાઢીને કાર્બન ડાયોક્સાઇડ મુક્ત કરે છે, જેને છોડ ગ્રહણ કરે છે."
+        ],
+        "detailedSummary": "આ વિગતમાં સમજાવવામાં આવ્યું છે કે છોડ ઓક્સિજનનું નિર્માણ કરે છે, જેના દ્વારા મનુષ્યો શ્વસનક્રિયા કરી શકે છે. સાથોસાથ, મનુષ્યો દ્વારા શ્વાસ બહાર કાઢતી વખતે જે કાર્બન ડાયોક્સાઇડ મુક્ત કરવામાં આવે છે, તેને છોડ પોતાના ઉપયોગમાં લે છે.",
+        "serviceMode": "gemini"
+      }
+    },
+    {
+      "case": "gu_in-2",
+      "language": "Gujarati",
+      "source_filename": "10033981969112827295.wav",
+      "source_id": "1797",
+      "reference": "દરેક વ્યક્તિ સમાજનો હિસ્સો બને છે અને પરિવહન પ્રણાલીઓનો ઉપયોગ કરે છે. પરિવહન પ્રણાલી વિશે લગભગ દરેકની ફરિયાદ હોય છે.",
+      "normalized_reference": "દરેક વ્યક્તિ સમાજનો હિસ્સો બને છે અને પરિવહન પ્રણાલીઓનો ઉપયોગ કરે છે પરિવહન પ્રણાલી વિશે લગભગ દરેકની ફરિયાદ હોય છે",
+      "gender": "FEMALE",
+      "duration_s": 8.4,
+      "source": "https://huggingface.co/datasets/google/fleurs/resolve/70bb2e84b976b7e960aa89f1c648e09c59f894dd/data/gu_in/audio/test.tar.gz",
+      "category": "human recording",
+      "format": ".ogg",
+      "transcription_seconds": 2.82,
+      "transcription_status": 200,
+      "transcript": "દરેક વ્યક્તિ સમાજ નો હિસ્સો બને છે અને પરિવહન પ્રણાલીઓનો ઉપયોગ કરે છે. પરિવહન પ્રણાલી વિશે લગભગ દરેકને ફરિયાદ હોય છે.",
+      "reference_words": 20,
+      "word_errors": 3,
+      "wer": 0.15,
+      "cer": 0.0175,
+      "summary_seconds": 19.58,
+      "summary_status": 200,
+      "summary_response": {
+        "success": true,
+        "summary": "દરેક વ્યક્તિ સમાજનો ભાગ છે અને પરિવહન પ્રણાલીઓનો ઉપયોગ કરે છે. આ પરિવહન પ્રણાલી વિશે લગભગ દરેક વ્યક્તિને ફરિયાદ હોય છે.",
+        "bulletPoints": [
+          "દરેક વ્યક્તિ સમાજનો એક ભાગ છે અને પરિવહન પ્રણાલીઓનો ઉપયોગ કરે છે.",
+          "પરિવહન પ્રણાલી સંદર્ભે લગભગ તમામ લોકોને ફરિયાદ હોય છે."
+        ],
+        "detailedSummary": "આ વિગતમાં જણાવવામાં આવ્યું છે કે દરેક વ્યક્તિ સમાજનો હિસ્સો બનીને પરિવહન પ્રણાલીઓનો ઉપયોગ કરે છે, અને આ પ્રણાલી વિશે લગભગ દરેક વ્યક્તિને કોઈને કોઈ ફરિયાદ હોય છે.",
+        "serviceMode": "gemini"
+      }
+    },
+    {
+      "case": "en_us-1",
+      "language": "English",
+      "source_filename": "1003119935936341070.wav",
+      "source_id": "1904",
+      "reference": "However, due to the slow communication channels, styles in the west could lag behind by 25 to 30 year.",
+      "normalized_reference": "however due to the slow communication channels styles in the west could lag behind by 25 to 30 year",
+      "gender": "MALE",
+      "duration_s": 10.56,
+      "source": "https://huggingface.co/datasets/google/fleurs/resolve/70bb2e84b976b7e960aa89f1c648e09c59f894dd/data/en_us/audio/test.tar.gz",
+      "category": "human recording",
+      "format": ".webm",
+      "transcription_seconds": 3.61,
+      "transcription_status": 200,
+      "transcript": "However, due to the slow communication channels, styles in the West could lag behind by 25 to 30 years.",
+      "reference_words": 19,
+      "word_errors": 1,
+      "wer": 0.0526,
+      "cer": 0.0101,
+      "summary_seconds": 1.22,
+      "summary_status": 429,
+      "summary_response": {
+        "detail": "Gemini's usage limit was reached. Wait and try again, or check the backend project's quota."
+      }
+    },
+    {
+      "case": "en_us-2",
+      "language": "English",
+      "source_filename": "10052240106321793346.wav",
+      "source_id": "1675",
+      "reference": "All nouns, alongside the word Sie for you, always begin with a capital letter, even in the middle of a sentence.",
+      "normalized_reference": "all nouns alongside the word sie for you always begin with a capital letter even in the middle of a sentence",
+      "gender": "MALE",
+      "duration_s": 8.76,
+      "source": "https://huggingface.co/datasets/google/fleurs/resolve/70bb2e84b976b7e960aa89f1c648e09c59f894dd/data/en_us/audio/test.tar.gz",
+      "category": "human recording",
+      "format": ".flac",
+      "transcription_seconds": 3.06,
+      "transcription_status": 200,
+      "transcript": "All nouns alongside the world safe for you always begin with a capital letter, even in the middle of a sentence.",
+      "reference_words": 21,
+      "word_errors": 2,
+      "wer": 0.0952,
+      "cer": 0.0278,
+      "summary_not_attempted_due_to_quota": true,
+      "summary_seconds": null,
+      "summary_status": null
+    },
+    {
+      "case": "mixed-hindi",
+      "language": "Hindi",
+      "reference": "कुछ अणुओं में अस्थिर केंद्रक होता है, जिसका मतलब यह है कि उनमें थोड़े या बिना किसी झटके से टूटने की प्रवृत्ति होती है, However, due to the slow communication channels, styles in the west could lag behind by 25 to 30 year.",
+      "duration_s": 19.68,
+      "category": "concatenated human recordings; language switching, not natural code-switching",
+      "format": ".wav",
+      "transcription_seconds": 2.88,
+      "transcription_status": 200,
+      "transcript": "कुछ अणुओं में अस्थिर केंद्रक होता है, जिसका मतलब यह है कि उनमें थोड़े या बिना किसी झटके से टूटने की प्रवृत्ति होती है। However, due to the slow communication channels, styles in the West could lag behind by 25 to 30 years.",
+      "reference_words": 43,
+      "word_errors": 1,
+      "wer": 0.0233,
+      "cer": 0.0046,
+      "summary_not_attempted_due_to_quota": true,
+      "summary_seconds": null,
+      "summary_status": null
+    },
+    {
+      "case": "mixed-gujarati",
+      "language": "Gujarati",
+      "reference": "છોડ ઓક્સિજન બનાવે છે જેનેથી મનુષ્ય શ્વાસ લે છે, અને તેઓ કાર્બન-ડાયોક્સાઇડ લે છે જેને મનુષ્ય શ્વાસથી બહાર કાઢે છે (એટલે ​​કે, શ્વાસ બહાર કાઢે ). However, due to the slow communication channels, styles in the west could lag behind by 25 to 30 year.",
+      "duration_s": 21.72,
+      "category": "concatenated human recordings; language switching, not natural code-switching",
+      "format": ".aac",
+      "transcription_seconds": 6.48,
+      "transcription_status": 200,
+      "transcript": "છોડ ઓક્સિજન બનાવે છે જેનાથી મનુષ્યો શ્વસન લે છે અને તેઓ કાર્બન ડાયોક્સાઇડ લે છે જેને મનુષ્યો શ્વાસથી બહાર કાઢે છે એટલે કે શ્વાસ બહાર કાઢે. However, due to the slow communication channels, styles in the West could lag behind by 25 to 30 years.",
+      "reference_words": 45,
+      "word_errors": 5,
+      "wer": 0.1111,
+      "cer": 0.0255,
+      "summary_not_attempted_due_to_quota": true,
+      "summary_seconds": null,
+      "summary_status": null
+    }
+  ],
+  "quota_events": [
+    {
+      "case": "gu_in-1",
+      "language": "Gujarati",
+      "source_filename": "10022069032386256914.wav",
+      "source_id": "1867",
+      "reference": "છોડ ઓક્સિજન બનાવે છે જેનેથી મનુષ્ય શ્વાસ લે છે, અને તેઓ કાર્બન-ડાયોક્સાઇડ લે છે જેને મનુષ્ય શ્વાસથી બહાર કાઢે છે (એટલે ​​કે, શ્વાસ બહાર કાઢે ).",
+      "normalized_reference": "છોડ ઓક્સિજન બનાવે છે જેનેથી મનુષ્ય શ્વાસ લે છે અને તેઓ કાર્બન-ડાયોક્સાઇડ લે છે જેને મનુષ્ય શ્વાસથી બહાર કાઢે છે એટલે ​​કે શ્વાસ બહાર કાઢે ",
+      "gender": "MALE",
+      "duration_s": 11.16,
+      "source": "https://huggingface.co/datasets/google/fleurs/resolve/70bb2e84b976b7e960aa89f1c648e09c59f894dd/data/gu_in/audio/test.tar.gz",
+      "category": "human recording",
+      "format": ".m4a",
+      "transcription_seconds": 1.15,
+      "transcription_status": 429,
+      "transcription_error": "Gemini's usage limit was reached. Wait and try again, or check the backend project's quota."
+    },
+    {
+      "case": "en_us-1",
+      "language": "English",
+      "source_filename": "1003119935936341070.wav",
+      "source_id": "1904",
+      "reference": "However, due to the slow communication channels, styles in the west could lag behind by 25 to 30 year.",
+      "normalized_reference": "however due to the slow communication channels styles in the west could lag behind by 25 to 30 year",
+      "gender": "MALE",
+      "duration_s": 10.56,
+      "source": "https://huggingface.co/datasets/google/fleurs/resolve/70bb2e84b976b7e960aa89f1c648e09c59f894dd/data/en_us/audio/test.tar.gz",
+      "category": "human recording",
+      "format": ".webm",
+      "transcription_seconds": 3.61,
+      "transcription_status": 200,
+      "transcript": "However, due to the slow communication channels, styles in the West could lag behind by 25 to 30 years.",
+      "reference_words": 19,
+      "word_errors": 1,
+      "wer": 0.0526,
+      "cer": 0.0101,
+      "summary_seconds": 1.22,
+      "summary_status": 429,
+      "summary_response": {
+        "detail": "Gemini's usage limit was reached. Wait and try again, or check the backend project's quota."
+      }
+    }
+  ],
+  "backend_commit": "fbe8e73",
+  "frontend_commit": "c2e4f10",
+  "stt_model": "gemini-3.5-transcribe",
+  "summary_model": "gemini-3.8-flash",
+  "source_license": "CC-BY-4.0; Google FLEURS dataset, https://huggingface.co/datasets/google/fleurs",
+  "error_checks": [
+    {
+      "case": "empty audio",
+      "status": 422,
+      "expected": 422,
+      "pass": true
+    },
+    {
+      "case": "unsupported file",
+      "status": 415,
+      "expected": 415,
+      "pass": true
+    },
+    {
+      "case": "unsupported language",
+      "status": 422,
+      "expected": 422,
+      "pass": true
+    },
+    {
+      "case": "large audio",
+      "status": 413,
+      "expected": 413,
+      "pass": true
+    },
+    {
+      "case": "blank text",
+      "status": 422,
+      "expected": 422,
+      "pass": true
+    },
+    {
+      "case": "long text",
+      "status": 422,
+      "expected": 422,
+      "pass": true
+    },
+    {
+      "case": "invalid mode",
+      "status": 422,
+      "expected": 422,
+      "pass": true
+    },
+    {
+      "case": "silent audio",
+      "status": 422,
+      "expected": 422,
+      "pass": true
+    },
+    {
+      "case": "corrupt audio",
+      "status": 422,
+      "expected": 422,
+      "pass": true
+    }
+  ],
+  "browser_checks": [
+    {
+      "scenario": "quota failure with recorded provider response",
+      "pass": true,
+      "remaining": 2,
+      "history_count": 0,
+      "error_shown": true
+    },
+    {
+      "scenario": "successful retry from retained transcript with recorded live provider responses; real usage backend",
+      "pass": true,
+      "remaining": 1,
+      "history_count": 1,
+      "service": "Gemini"
+    },
+    {
+      "scenario": "history and usage survive page reload",
+      "pass": true
+    }
+  ],
+  "browser_test_method": "Chrome DevTools Protocol. Replay recorded real transcription, summary, and quota responses; use the real backend for usage checks and increments.",
+  "summary_quota": {
+    "reported_request_limit": 20,
+    "model": "gemini-3.8-flash",
+    "quota_window": "not established from the provider response"
+  }
+}
