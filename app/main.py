@@ -14,7 +14,7 @@ from .schemas import (
     UsageResetRequest,
     UsageResponse,
 )
-from .services.summarizer import HeuristicSummarizer
+from .services.summarizer import GeminiSummarizer, SummaryError
 from .services.transcriber import GeminiTranscriber, TranscriptionError
 from .usage_store import UsageStore
 
@@ -28,7 +28,7 @@ app.add_middleware(
 )
 
 usage_store = UsageStore()
-summarizer = HeuristicSummarizer()
+summarizer = GeminiSummarizer()
 transcriber = GeminiTranscriber()
 
 
@@ -38,8 +38,11 @@ def health() -> dict[str, str]:
 
 
 @app.post("/summarize", response_model=SummarizeResponse)
-def summarize(payload: SummarizeRequest) -> SummarizeResponse:
-    return summarizer.summarize(payload)
+async def summarize(payload: SummarizeRequest) -> SummarizeResponse:
+    try:
+        return await summarizer.summarize(payload)
+    except SummaryError as error:
+        raise HTTPException(status_code=error.status_code, detail=str(error)) from None
 
 
 @app.post("/transcribe", response_model=TranscribeResponse)

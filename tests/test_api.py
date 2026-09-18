@@ -11,12 +11,15 @@ if str(ROOT) not in sys.path:
 import app.main as main_module
 from app.usage_store import UsageStore
 from app.services.transcriber import GeminiTranscriber, TranscriptionError
+from app.services.summarizer import GeminiSummarizer, SummaryError
+from app.schemas import SummarizeResponse
 
 
 @pytest.fixture(autouse=True)
 def isolated_backend(tmp_path, monkeypatch):
     monkeypatch.setattr(main_module, "usage_store", UsageStore(tmp_path / "usage.db"))
     monkeypatch.setattr(main_module, "transcriber", GeminiTranscriber(api_key=""))
+    monkeypatch.setattr(main_module, "summarizer", GeminiSummarizer(api_key=""))
 
 
 @pytest.fixture
@@ -35,27 +38,50 @@ def test_health_endpoint_returns_service_metadata(client):
     }
 
 
-def test_summarize_returns_heuristic_summary_for_real_input(client):
-    response = client.post(
-        "/summarize",
-        json={
-            "text": (
-                "The mobile app now supports uploading audio notes from the home screen. "
-                "Users can track their free summary quota before upgrading to pro. "
-                "The backend stores usage data in SQLite so local testing works offline. "
-                "A cleaner summary response makes the app easier to demo to early users."
-            ),
-            "language": "English",
-            "mode": "short_bullets",
-        },
-    )
+def test_summarize_returns_provider_result(client, monkeypatch):
+    async def fake_summarize(payload):
+        assert payload.text == "કાલે સવારે મીટિંગ છે."
+        assert payload.language == "Gujarati"
+        assert payload.mode == "short_bullets"
+        return SummarizeResponse(
+            summary="કાલે મીટિંગ છે.",
+            bulletPoints=["મીટિંગ સવારે છે."],
+            detailedSummary="કાલે સવારે મીટિંગ યોજાશે.",
+        )
 
+    monkeypatch.setattr(main_module.summarizer, "summarize", fake_summarize)
+    response = client.post("/summarize", json={
+        "text": "  કાલે સવારે મીટિંગ છે.  ", "language": "Gujarati",
+    })
     assert response.status_code == 200
-    payload = response.json()
-    assert payload["serviceMode"] == "heuristic"
-    assert "uploading audio notes" in payload["summary"].lower()
-    assert len(payload["bulletPoints"]) == 3
-    assert all("dummy summary" not in point.lower() for point in payload["bulletPoints"])
+    assert response.json()["serviceMode"] == "gemini"
+    assert response.json()["summary"] == "કાલે મીટિંગ છે."
+
+
+@pytest.mark.parametrize("payload", [
+    {"text": "   "}, {"text": "x" * 50_001},
+    {"text": "Note", "language": "French"},
+    {"text": "Note", "mode": "unknown"},
+])
+def test_summarize_rejects_invalid_input_before_provider(client, payload):
+    assert client.post("/summarize", json=payload).status_code == 422
+
+
+def test_summarize_missing_credentials(client):
+    response = client.post("/summarize", json={"text": "A note."})
+    assert response.status_code == 503
+    assert "summary" not in response.json()
+
+
+def test_summarize_failure_does_not_consume_usage(client, monkeypatch):
+    async def fail(payload):
+        raise SummaryError("Gemini's usage limit was reached.", 429)
+
+    monkeypatch.setattr(main_module.summarizer, "summarize", fail)
+    response = client.post("/summarize", json={"text": "A note."})
+    assert response.status_code == 429
+    assert response.json()["detail"] == "Gemini's usage limit was reached."
+    assert client.post("/usage/check", json={"deviceId": "test-device"}).json()["used"] == 0
 
 
 def test_usage_endpoints_increment_and_reset_state(client):

@@ -1,13 +1,13 @@
 # Summary Python Backend
 
-FastAPI backend for the mobile summary app. Text summarization uses a local heuristic summarizer, and audio transcription uses Gemini's dedicated `gemini-3.5-transcribe` model.
+FastAPI backend for the mobile summary app. Text summarization uses Gemini `gemini-3.8-flash`, and audio transcription uses Gemini's dedicated `gemini-3.5-transcribe` model.
 
 ## Current Status
 
 | Endpoint | Status | Notes |
 | --- | --- | --- |
 | `GET /health` | Real | Returns service and version metadata |
-| `POST /summarize` | Real | Generates a heuristic summary from the submitted text |
+| `POST /summarize` | Real | Generates a validated Gemini summary in Hindi, Gujarati, or English |
 | `POST /usage/check` | Real | Reads local usage state from SQLite |
 | `POST /usage/increment` | Real | Increments local usage state |
 | `POST /usage/reset` | Real | Resets local usage state |
@@ -15,8 +15,8 @@ FastAPI backend for the mobile summary app. Text summarization uses a local heur
 
 ## Review Path
 
-- Health, text summaries, and usage tracking work without external services
-- Real audio transcription requires Gemini access; automated tests mock Gemini
+- Health and usage tracking work without external services
+- Text summaries and audio transcription require Gemini access; automated tests mock Gemini
 - `pytest` covers health, summarization, usage tracking, and upload handling
 - GitHub Actions CI runs the Python test suite on push and pull request events
 
@@ -31,13 +31,14 @@ The project number is not needed for API-key authentication.
 cp .env.example .env
 ```
 
-The default model is `gemini-3.5-transcribe`; `GEMINI_STT_MODEL` can override it.
+The transcription model defaults to `gemini-3.5-transcribe` (`GEMINI_STT_MODEL`).
+The summary model defaults to `gemini-3.8-flash` (`GEMINI_SUMMARY_MODEL`).
 Hindi and Gujarati requests also include an Indian English language hint for mixed
 voice notes. Omitting `language` enables automatic language detection.
 
-Audio is sent inline through the [Gemini Interactions API](https://ai.google.dev/gemini-api/docs/transcribe)
-with interaction storage disabled. New uploads are not saved to the backend's
-`data/uploads` directory. Existing files from the old prototype are not deleted.
+Audio and submitted transcript text are sent through the [Gemini Interactions API](https://ai.google.dev/gemini-api/docs/interactions)
+with interaction storage disabled for both transcription and summaries. New uploads
+are not saved to the backend's `data/uploads` directory. Existing files from the old prototype are not deleted.
 This does not override Google's own data handling policies; free-tier content
 can be used to improve Google's products. See [Gemini pricing and data handling](https://ai.google.dev/gemini-api/docs/pricing).
 
@@ -48,7 +49,7 @@ cd /home/addweb/Learning/Pro/04-prototypes-needing-work/summary-app/summary-pyth
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-uvicorn app.main:app --reload --host 127.0.0.1 --port 8010
+python -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8010
 ```
 
 If you want to run the test suite locally:
@@ -81,8 +82,8 @@ curl -X POST http://127.0.0.1:8010/summarize \
   "bulletPoints": [
     "The app can upload voice notes, track free usage locally, and return readable summaries for review."
   ],
-  "detailedSummary": "Auto-generated summary for the submitted English text.\n\n- The app can upload voice notes, track free usage locally, and return readable summaries for review.",
-  "serviceMode": "heuristic"
+  "detailedSummary": "The app supports voice-note uploads, local usage tracking, and readable summaries for review.",
+  "serviceMode": "gemini"
 }
 ```
 
@@ -104,6 +105,26 @@ the recognized `transcript`. Missing credentials return 503; empty/invalid audio
 returns 422; unsupported file extensions return 415; oversized uploads return
 413; Gemini quota errors return 429; provider timeouts return 504. Errors never
 return a placeholder transcript or expose the API key.
+
+## Summary Contract
+
+`POST /summarize` accepts nonblank text up to 50,000 characters, a language of
+`Hindi`, `Gujarati`, or `English`, and modes `short`, `short_bullets`, or `detailed`.
+The existing `long_bullets` and `paragraph` modes remain supported. Defaults are
+Hindi and short bullets. All responses contain `summary`, `bulletPoints`, and
+`detailedSummary`; the selected mode controls the detail level and bullet limit.
+Gemini is instructed to use the selected language's native script, preserve facts
+and uncertainty, and treat transcript instructions as untrusted content.
+
+The provider receives a JSON schema, and the backend validates the completed
+response before returning it. Missing credentials or an unavailable model return
+503, provider quota errors 429, timeouts 504, and malformed/incomplete responses or
+other provider failures 502. Invalid input returns 422 before any provider call.
+There is no silent heuristic fallback. Model-generated summaries can still
+misinterpret source material and should be reviewed for accuracy.
+
+The usage endpoints are separate: clients increment usage only after a successful
+summary. This prototype does not yet enforce quotas within provider endpoints.
 
 ## Production Gaps
 

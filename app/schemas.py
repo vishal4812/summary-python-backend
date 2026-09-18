@@ -1,10 +1,16 @@
-from pydantic import BaseModel, Field
+from typing import Annotated, Literal
+
+from pydantic import BaseModel, Field, StringConstraints
 
 
 class SummarizeRequest(BaseModel):
-    text: str = Field(min_length=1)
-    language: str = "Hindi"
-    mode: str = "short_bullets"
+    text: Annotated[
+        str, StringConstraints(strip_whitespace=True, min_length=1, max_length=50_000)
+    ]
+    language: Literal["Hindi", "Gujarati", "English"] = "Hindi"
+    mode: Literal[
+        "short", "detailed", "short_bullets", "long_bullets", "paragraph"
+    ] = "short_bullets"
 
 
 class SummarizeResponse(BaseModel):
@@ -12,7 +18,7 @@ class SummarizeResponse(BaseModel):
     summary: str
     bulletPoints: list[str]
     detailedSummary: str
-    serviceMode: str = "heuristic"
+    serviceMode: str = "gemini"
 
 
 class UsageCheckRequest(BaseModel):
